@@ -63,6 +63,8 @@
                                 <a class="btn btn-link" href="{{ route('password.request') }}">
                                     Forgot Your Password?
                                 </a>
+                                <a href="{{ route('social.login', ['facebook']) }}" class="btn btn-block btn-social btn-facebook btn-flat"><i class="fa fa-facebook"></i> Login dengan Facebook</a>
+                                <a href="{{ route('social.login', ['google']) }}" class="btn btn-block btn-social btn-google btn-flat"><i class="fa fa-google-plus"></i> Login dengan Google+</a>
                             </div>
                         </div>
                     </form>

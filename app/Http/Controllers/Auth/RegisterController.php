@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use Socialite;
+use Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -108,5 +110,57 @@ class RegisterController extends Controller
 
 
       return redirect('/login');
+    }
+
+    //funday add
+    public function redirectToProvider($provider)
+    {
+        return Socialite::driver($provider)->redirect();
+    }
+
+    /**
+     * Obtain the user information from Facebook.
+     *
+     * @return Response
+     */
+    public function handleProviderCallback($provider)
+    {
+        try {
+            $user = Socialite::driver($provider)->User();
+        } catch (Exception $e) {
+            return redirect('/social/login/facebook');
+        }
+
+        $authUser = $this->findOrCreateUser($user,$provider);
+
+        Auth::login($authUser, true);
+
+        return redirect()->route('home');
+    }
+
+    /**
+     * Return user if exists; create and return if doesn't
+     *
+     * @param $provider
+     * @return User
+     */
+    private function findOrCreateUser($provideruser,$providername)
+    {
+        $authUser = User::where('email', $provideruser->getEmail())->first();
+
+        if ($authUser){
+            return $authUser;
+        }
+
+        return User::create([
+            'name' => $provideruser->name,
+            'email' => $provideruser->getEmail(),
+            'social_id' => $provideruser->getId(),
+	    'social_provider' => $providername,
+            'avatar' => $provideruser->getAvatar(),
+            'password' => md5(rand(1,10000)),
+            'token' => str_random(20),
+            'status' => '1',
+        ]);
     }
 }

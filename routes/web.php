@@ -22,3 +22,7 @@ Auth::routes();
 Route::group(['middleware' => ['auth']], function(){
   Route::get('/home', 'HomeController@index')->name('home');
 });
+
+//login dengan Socialite
+Route::get('social/login/redirect/{provider}', ['uses' => 'Auth\RegisterController@redirectToProvider', 'as' => 'social.login']);
+Route::get('social/login/{provider}', 'Auth\RegisterController@handleProviderCallback');

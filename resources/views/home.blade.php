@@ -15,6 +15,7 @@
                     @endif
 
                     You are logged in!
+                    <img src="{{ Auth::user()->avatar }}" height="22" class="user-image" alt="User Image"> {{ Auth::user()->name }}
                 </div>
             </div>
         </div>
